@@ -28,7 +28,7 @@ export async function removeContact(contactId) {
 
   const removed = contacts.splice(index, 1);
   await writeContacts(contacts);
-  return removed;
+  return removed[0];
 }
 
 export async function addContact(name, email, phone) {
