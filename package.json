@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "commander": "^12.0.0",
     "crypto-randomuuid": "^1.0.0"

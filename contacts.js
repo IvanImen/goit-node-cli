@@ -8,33 +8,33 @@ export async function listContacts() {
   return JSON.parse(data);
 }
 
+async function writeContacts(contacts) {
+  return fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+}
+
 export async function getContactById(contactId) {
   const contacts = await listContacts();
-  return contacts.find((contact) => contact.id === contactId) || null; // Повертаємо або об'єкт контакту з таким id, або null, якщо контакт з таким id не знайдений.
+  return contacts.find((contact) => contact.id === contactId) || null;
 }
 
 export async function removeContact(contactId) {
   const contacts = await listContacts();
+
   const index = contacts.findIndex((contact) => contact.id === contactId);
-  if (index !== -1) {
+
+  if (index === -1) {
     return null;
   }
 
-  const deletedContact = contacts[index];
-
-  contacts.splice(index, 1);
-
-  await addContact(contacts);
-
-  return deletedContact;
+  const removed = contacts.splice(index, 1);
+  await writeContacts(contacts);
+  return removed;
 }
-
-// ...твій код. Повертає об'єкт видаленого контакту. Повертає null, якщо контакт з таким id не знайдений.
 
 export async function addContact(name, email, phone) {
   const contacts = await listContacts();
   const newContact = { id: crypto.randomUUID(), name, email, phone };
   contacts.push(newContact);
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, undefined, 2));
-  return newContact; //  Повертає об'єкт доданого контакту (з id).
+  await writeContacts(contacts);
+  return newContact;
 }
